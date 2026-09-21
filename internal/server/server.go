@@ -1,11 +1,6 @@
 package server
 
 import (
-	"TestTask/internal/handler"
-	"TestTask/internal/middleware"
-	"TestTask/internal/repository"
-	"TestTask/internal/service"
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -13,6 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
+
+	"TestTask/internal/handler"
+	"TestTask/internal/middleware"
+	"TestTask/internal/repository"
+	"TestTask/internal/service"
 )
 
 func New(jwtSecret string, pool *pgxpool.Pool, redisClient *redis.Client, uploadDir string) (*gin.Engine, error) {
@@ -36,11 +36,11 @@ func New(jwtSecret string, pool *pgxpool.Pool, redisClient *redis.Client, upload
 
 	r.HandleMethodNotAllowed = true
 	r.NoMethod(func(c *gin.Context) {
-		handler.RespondError(c, http.StatusMethodNotAllowed, errors.New("Метод не доступен по данному пути"))
+		handler.RespondError(c, http.StatusMethodNotAllowed, "Метод не доступен по данному пути")
 	})
 
 	r.NoRoute(func(c *gin.Context) {
-		handler.RespondError(c, http.StatusNotImplemented, errors.New("Метод не реализован"))
+		handler.RespondError(c, http.StatusNotImplemented, "Метод не реализован")
 	})
 
 	public := r.Group("/api")

@@ -36,11 +36,6 @@ func main() {
 		log.Fatalf("Не удалось поднять сервер: %v", err)
 	}
 
-	log.Println("Сервер запущен на порту :8080")
-	if err := engine.Run(":8080"); err != nil {
-		log.Fatalf("Ошибка сервера: %v", err)
-	}
-
 	srv := &http.Server{
 		Addr:    ":8080",
 		Handler: engine,

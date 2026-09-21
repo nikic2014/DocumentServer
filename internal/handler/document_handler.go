@@ -41,11 +41,11 @@ func (h *DocumentHandler) RegisterRoutes(protected *gin.RouterGroup) {
 func (h *DocumentHandler) Upload(c *gin.Context) {
 	var meta dto.UploadMeta
 	if err := json.Unmarshal([]byte(c.PostForm("meta")), &meta); err != nil {
-		RespondError(c, http.StatusBadRequest, errors.New("Неверный meta json"))
+		RespondError(c, http.StatusBadRequest, "Неверный meta json")
 		return
 	}
 	if meta.Name == "" {
-		RespondError(c, http.StatusBadRequest, errors.New("meta.name обязательно для заполнения"))
+		RespondError(c, http.StatusBadRequest, "meta.name обязательно для заполнения")
 		return
 	}
 
@@ -66,7 +66,7 @@ func (h *DocumentHandler) Upload(c *gin.Context) {
 	if meta.File {
 		file, header, err := c.Request.FormFile("file")
 		if err != nil {
-			RespondError(c, http.StatusBadRequest, errors.New("Поле file обязательно для заполнения, если meta.file имеет значение true."))
+			RespondError(c, http.StatusBadRequest, "Поле file обязательно для заполнения, если meta.file имеет значение true.")
 			return
 		}
 		defer file.Close()
@@ -79,22 +79,20 @@ func (h *DocumentHandler) Upload(c *gin.Context) {
 
 	doc, err := h.docs.Upload(c.Request.Context(), input)
 	if err != nil {
-		RespondError(c, http.StatusBadRequest, err)
+		RespondError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": gin.H{
-			"json": doc.JSONData,
-			"file": doc.Name,
-		},
+	RespondData(c, http.StatusOK, gin.H{
+		"json": doc.JSONData,
+		"file": doc.Name,
 	})
 }
 
 func (h *DocumentHandler) Get(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		RespondError(c, http.StatusBadRequest, errors.New("Неверный id документа"))
+		RespondError(c, http.StatusBadRequest, "Неверный id документа")
 		return
 	}
 
@@ -114,7 +112,7 @@ func (h *DocumentHandler) Get(c *gin.Context) {
 		c.Status(http.StatusOK)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": doc.JSONData})
+	RespondData(c, http.StatusOK, doc.JSONData)
 }
 
 func (h *DocumentHandler) List(c *gin.Context) {
@@ -122,7 +120,7 @@ func (h *DocumentHandler) List(c *gin.Context) {
 	if raw := c.Query("limit"); raw != "" {
 		l, err := strconv.Atoi(raw)
 		if err != nil || l < 0 {
-			RespondError(c, http.StatusBadRequest, errors.New("Неверный лимит"))
+			RespondError(c, http.StatusBadRequest, "Неверный лимит")
 			return
 		}
 		limit = l
@@ -136,7 +134,7 @@ func (h *DocumentHandler) List(c *gin.Context) {
 		Limit:          limit,
 	})
 	if err != nil {
-		RespondError(c, http.StatusBadRequest, err)
+		RespondError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -158,16 +156,14 @@ func (h *DocumentHandler) List(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": gin.H{"docs": items},
-	})
+	RespondData(c, http.StatusOK, gin.H{"docs": items})
 }
 
 func (h *DocumentHandler) Delete(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
-		RespondError(c, http.StatusBadRequest, errors.New("Неверный id документа"))
+		RespondError(c, http.StatusBadRequest, "Неверный id документа")
 		return
 	}
 
@@ -176,20 +172,16 @@ func (h *DocumentHandler) Delete(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"response": gin.H{
-			idParam: true,
-		},
-	})
+	RespondResponse(c, http.StatusOK, gin.H{idParam: true})
 }
 
 func (h *DocumentHandler) respondDocError(c *gin.Context, err error) {
 	switch {
 	case errors.Is(err, domain.ErrDocumentNotFound):
-		RespondError(c, http.StatusBadRequest, err)
+		RespondError(c, http.StatusBadRequest, err.Error())
 	case errors.Is(err, domain.ErrDocumentForbidden):
-		RespondError(c, http.StatusForbidden, err)
+		RespondError(c, http.StatusForbidden, err.Error())
 	default:
-		RespondError(c, http.StatusInternalServerError, err)
+		RespondError(c, http.StatusInternalServerError, err.Error())
 	}
 }

@@ -46,7 +46,7 @@ func extractBearerToken(c *gin.Context) (string, bool) {
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req dto.RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		RespondError(c, http.StatusBadRequest, err)
+		RespondError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -56,11 +56,11 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		if errors.Is(err, domain.ErrLoginAlreadyExists) {
 			status = http.StatusBadRequest
 		}
-		RespondError(c, status, err)
+		RespondError(c, status, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	RespondResponse(c, http.StatusOK, gin.H{
 		"id":       user.ID,
 		"username": user.Login,
 	})
@@ -70,36 +70,36 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	var req dto.LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		RespondError(c, http.StatusBadRequest, err)
+		RespondError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	token, err := h.auth.Login(c.Request.Context(), req.Login, req.Password)
 	if err != nil {
-		RespondError(c, http.StatusUnauthorized, err)
+		RespondError(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	RespondData(c, http.StatusOK, gin.H{"token": token})
 }
 
 func (h *AuthHandler) Logout(c *gin.Context) {
 	tokenString, ok := extractBearerToken(c)
 	if !ok {
-		RespondError(c, http.StatusUnauthorized, errors.New("Отсутсвует токен авторизации"))
+		RespondError(c, http.StatusUnauthorized, "Отсутсвует токен авторизации")
 		return
 	}
 
 	if err := h.auth.Logout(c.Request.Context(), tokenString); err != nil {
-		RespondError(c, http.StatusBadRequest, err)
+		RespondError(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "выход успешно выполнен"})
+	RespondResponse(c, http.StatusOK, gin.H{"message": "выход успешно выполнен"})
 }
 
 func (h *AuthHandler) Me(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
+	RespondData(c, http.StatusOK, gin.H{
 		"user_id":  c.GetInt64("user_id"),
 		"username": c.GetString("username"),
 	})

@@ -1,0 +1,201 @@
+{
+  "info": {
+    "_postman_id": "f8752370-8983-4a7a-b6f4-1f53a53df8b2",
+    "name": "AstralTestTask",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30159687"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"login\" : \"test\",\n    \"password\": \"ssedwsed\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/register",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"login\" : \"test\",\n    \"password\": \"ssedwsed\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/register",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logout",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3QyIiwiZXhwIjoxNzkwMDE0MTI3LCJpYXQiOjE3OTAwMTMyMjcsImp0aSI6ImY1MGFlYmMwZmViMDg5N2ZkYWUyZTQzYzNmMjMyODE3In0.cBCyUlnqXpvuwVwLCLTwVgcNxW9JT2zBVdZ6bq_vqH8",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:8080/api/auth/logout",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Me",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Load File",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3QiLCJleHAiOjE3ODk4MjM3MjUsImlhdCI6MTc4OTgyMjgyNSwianRpIjoiM2Y2MDY5YTkwOTgzZTI3MGJiZTY2NmZjNjMzYzYyNTMifQ.IYkSP8Ml132ppxK7nWuJ7EL_cMOYsT1-THtYeOgRQG4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "meta",
+              "value": "{\"name\":\"photo.jpg\",\"file\":true,\"public\":false,\"mime\":\"image/jpeg\",\"grant\":[\"login1\",\"login2\"]}",
+              "type": "text"
+            },
+            {
+              "key": "json",
+              "value": "{\"caption\":\"пример\"}",
+              "type": "text"
+            },
+            {
+              "key": "file",
+              "type": "file",
+              "src": [
+                "/Users/nikita/Downloads/Back - Тестовое.pdf"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "localhost:8080/api/docs",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "docs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get file",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:8080/api/docs/2",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "docs",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Document",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    }
+  ]
+}
